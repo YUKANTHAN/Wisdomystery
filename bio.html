@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="description"
-    content="An interactive introduction to biomolecules in chemistry."
-  >
+  <meta name="description" content="An interactive introduction to biomolecules in chemistry.">
 
   <title>Biomolecules in Chemistry | WISDOMYSTERY</title>
 
@@ -18,21 +16,12 @@
       --teal: #0d9488;
       --cyan: #22d3ee;
       --cream: #fffaf0;
-      --paper: #f8edd7;
+      --paper: #f7f1e3;
+      --paper-dark: #efe6d2;
       --gold: #f6c453;
       --ink: #17212b;
-
-      /*
-        Change these values if your images have a different shape.
-        The open book is twice the width of one page.
-      */
-      --page-width: 370px;
-      --page-height: 510px;
-      --book-scale: min(
-        1,
-        calc((100vw - 30px) / (2 * 370)),
-        calc((100svh - 120px) / 510)
-      );
+      --maroon: #7c1f24;
+      --maroon-dark: #4a1216;
     }
 
     * {
@@ -252,6 +241,7 @@
     }
 
     @keyframes float {
+
       0%,
       100% {
         transform: translateY(0) scale(1);
@@ -262,7 +252,7 @@
       }
     }
 
-    /* -------------------- MATERIAL / BOOK -------------------- */
+    /* -------------------- FLIP BOOK -------------------- */
 
     .materials {
       min-height: 100svh;
@@ -277,295 +267,369 @@
       line-height: 1.7;
     }
 
-    .book-stage {
-      position: relative;
+    .book-zone {
       display: grid;
-      min-height: calc((var(--page-height) * var(--book-scale)) + 80px);
-      place-items: start center;
-      padding-top: 20px;
-      perspective: 2500px;
+      justify-items: center;
+      gap: 24px;
     }
 
-    .book-scaler {
-      width: calc(var(--page-width) * 2);
-      height: var(--page-height);
-      transform: scale(var(--book-scale));
+    .book-toolbar {
+      display: flex;
+      justify-content: center;
+      width: min(880px, 100%);
+      padding: 10px 6px;
+    }
+
+    .book-title {
+      color: var(--gold);
+      font-size: 0.95rem;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .page-status {
+      min-width: 150px;
+      color: #d8e9ee;
+      font-family: Inter, sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-weight: 750;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .book-frame {
+      --fs: min(1, (100vw - 48px) / 880px);
+      position: relative;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      min-height: calc(600px * var(--fs) + 30px);
+      perspective: 2400px;
+    }
+
+    .book-frame-inner {
+      position: relative;
+      width: 840px;
+      height: 600px;
+      transform: scale(var(--fs));
       transform-origin: top center;
     }
 
-    .book {
-      position: relative;
-      width: calc(var(--page-width) * 2);
-      height: var(--page-height);
-      transform: rotateX(3deg);
-      transform-style: preserve-3d;
-    }
-
-    .book::after {
+    .book-frame-inner .book-shadow {
       position: absolute;
-      z-index: -5;
-      content: "";
-      right: 4%;
-      bottom: -38px;
       left: 4%;
-      height: 48px;
-      background: rgba(0, 0, 0, 0.65);
-      border-radius: 50%;
-      filter: blur(22px);
-      transform: rotateX(75deg);
-    }
-
-    .base-page {
-      position: absolute;
-      top: 0;
-      width: var(--page-width);
-      height: var(--page-height);
-      overflow: hidden;
-      background:
-        linear-gradient(90deg, rgba(0, 0, 0, 0.08), transparent 9%),
-        var(--cream);
-      border: 8px solid #4b291b;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
-    }
-
-    .base-left {
-      left: 0;
-      border-right-width: 3px;
-      border-radius: 16px 2px 2px 16px;
-    }
-
-    .base-right {
-      right: 0;
-      border-left-width: 3px;
-      border-radius: 2px 16px 16px 2px;
-    }
-
-    .base-page::before {
-      position: absolute;
-      content: "";
-      inset: 0;
-      background:
-        repeating-linear-gradient(
-          0deg,
-          transparent 0 5px,
-          rgba(94, 62, 35, 0.025) 6px
-        );
+      right: 4%;
+      top: calc(var(--fs, 1) * 600px - 8px);
+      height: 52px;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.5), transparent 70%);
+      filter: blur(8px);
       pointer-events: none;
     }
 
-    .base-copy {
-      position: absolute;
-      inset: 9%;
-      display: grid;
-      place-content: center;
-      color: #5b422f;
-      border: 1px solid rgba(91, 66, 47, 0.25);
+    #flipbook {
+      width: 840px;
+      height: 600px;
+    }
+
+    #flipbook .page-wrapper {
+      overflow: hidden;
+    }
+
+    #flipbook .hard.back-cover {
+      z-index: 1;
+    }
+
+    #flipbook .text-page.end-page {
+      position: relative;
+      z-index: 10;
+    }
+
+    #flipbook .page {
+      overflow: hidden;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, 0.05), transparent 6%),
+        var(--paper);
       font-family: Georgia, "Times New Roman", serif;
-    }
-
-    .spine {
-      position: absolute;
-      z-index: 40;
-      top: -6px;
-      bottom: -6px;
-      left: 50%;
-      width: 22px;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.7),
-          #6d3e27 24%,
-          #b77948 50%,
-          #6d3e27 76%,
-          rgba(0, 0, 0, 0.65)
-        );
-      border-radius: 8px;
       box-shadow:
-        -8px 0 16px rgba(0, 0, 0, 0.3),
-        8px 0 16px rgba(0, 0, 0, 0.3);
-      transform: translateX(-50%) translateZ(5px);
-      pointer-events: none;
+        inset 0 0 0 1px rgba(139, 108, 68, 0.18),
+        inset 0 0 26px rgba(113, 79, 43, 0.1);
     }
 
-    /*
-      Each .sheet contains two sides:
-      .front is the visible right-side page.
-      .back becomes the visible left-side page after flipping.
-    */
-    .sheet {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      width: var(--page-width);
-      height: var(--page-height);
-      transform: rotateY(0deg);
-      transform-origin: left center;
-      transform-style: preserve-3d;
-      transition:
-        transform 1s cubic-bezier(0.2, 0.72, 0.15, 1),
-        filter 1s ease;
-      will-change: transform;
+    #flipbook .page.even {
+      background: linear-gradient(90deg, #f1e7cd 0%, #f7f1e3 16%, #f8f2e4 62%, #f3ecd8 100%);
     }
 
-    .sheet.flipped {
-      transform: rotateY(-180deg);
+    #flipbook .page.odd {
+      background: linear-gradient(270deg, #f1e7cd 0%, #f7f1e3 16%, #f8f2e4 62%, #f3ecd8 100%);
     }
 
-    .sheet.flipping {
-      filter: drop-shadow(18px 16px 15px rgba(0, 0, 0, 0.38));
-    }
-
-    .page-face {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      background: var(--paper);
-      border: 1px solid #d2bc96;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
-      box-shadow:
-        4px 8px 16px rgba(0, 0, 0, 0.2),
-        inset 0 0 18px rgba(113, 79, 43, 0.08);
-    }
-
-    .front {
-      border-radius: 0 11px 11px 0;
-      transform: rotateY(0deg) translateZ(0.2px);
-    }
-
-    .back {
-      border-radius: 11px 0 0 11px;
-      transform: rotateY(180deg) translateZ(0.2px);
-    }
-
-    .page-face::after {
+    #flipbook .page.odd::before,
+    #flipbook .page.even::after {
       position: absolute;
       content: "";
-      inset: 0;
-      background:
-        linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.13),
-          transparent 7%,
-          transparent 92%,
-          rgba(255, 255, 255, 0.25)
-        );
+      top: 0;
+      bottom: 0;
+      width: 44px;
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.12), transparent);
       pointer-events: none;
     }
 
-    .back::after {
-      background:
-        linear-gradient(
-          90deg,
-          rgba(255, 255, 255, 0.23),
-          transparent 8%,
-          transparent 93%,
-          rgba(0, 0, 0, 0.13)
-        );
+    #flipbook .page.even::after {
+      right: 0;
+      transform: scaleX(-1);
     }
 
-    .page-image {
-      display: block;
+    /* ---- hard covers ---- */
+
+    #flipbook .hard {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(35, 10, 12, 0.9);
+    }
+
+    #flipbook .hard.cover-page {
+      background:
+        radial-gradient(130% 150% at 28% 18%, #7d2327 0%, #5d1619 52%, #3f0d11 100%);
+    }
+
+    #flipbook .hard.back-cover {
+      background:
+        linear-gradient(140deg, #3f0d11 0%, #5d1619 55%, #3f0d11 100%);
+    }
+
+    .cover-inner {
+      position: absolute;
+      inset: 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      text-align: center;
+      color: #EBD9A8;
+      border: 1px solid rgba(212, 175, 55, 0.9);
+      outline: 4px solid rgba(8, 5, 3, 0.5);
+      outline-offset: -5px;
+      box-shadow: inset 0 0 0 5px rgba(212, 175, 55, 0.4);
+    }
+
+    .cover-brand {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      color: #D4AF37;
+      margin-bottom: 1.1rem;
+    }
+
+    .cover-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: 0.04em;
+      color: #F5EBD8;
+      text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
+    }
+
+    .cover-rule {
+      width: 180px;
+      height: 1px;
+      margin: 1rem auto;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    }
+
+    .cover-sub {
+      margin: 0.2rem 0 0;
+      font-family: Inter, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #D4AF37;
+    }
+
+    .back-cover .cover-inner {
+      justify-content: center;
+      gap: 14px;
+    }
+
+    /* ---- text pages (title / end) ---- */
+
+    .text-page {
+      position: relative;
+      height: 100%;
+      padding: 46px 48px;
+    }
+
+    .title-page,
+    .end-page {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .tp-brand {
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--maroon);
+    }
+
+    .tp-title {
+      margin: 20px 0 0;
+      font-size: 2.35rem;
+      line-height: 1.14;
+      color: var(--ink);
+    }
+
+    .tp-sub {
+      max-width: 300px;
+      margin: 16px 0 0;
+      color: #5b6b74;
+      font-family: Inter, sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .tp-rule {
+      width: 48px;
+      height: 2px;
+      margin: 22px 0;
+      background: var(--maroon);
+    }
+
+    .tp-note {
+      margin: 0;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #7a8a92;
+    }
+
+    /* ---- image pages ---- */
+
+    .img-page {
+      position: relative;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .img-page-bg {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      user-select: none;
-      -webkit-user-drag: none;
+    }
+
+    .img-page::before {
+      position: absolute;
+      content: "";
+      inset: 0;
+      background: rgba(212, 175, 55, 0.05);
+      pointer-events: none;
+    }
+
+    .img-page-copy {
+      position: relative;
+      z-index: 2;
+      padding: 0 34px;
+      text-align: center;
+      color: var(--ink);
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.7);
+    }
+
+    .img-page-copy h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.9rem;
+    }
+
+    .img-page-copy p {
+      max-width: 280px;
+      margin: 10px auto 0;
+      font-family: Inter, sans-serif;
+      font-size: 0.85rem;
+      line-height: 1.55;
     }
 
     .page-number {
       position: absolute;
-      z-index: 5;
-      right: 14px;
-      bottom: 11px;
-      display: grid;
-      min-width: 31px;
-      height: 31px;
-      padding: 0 8px;
-      place-items: center;
-      color: white;
-      background: rgba(3, 21, 31, 0.75);
-      border-radius: 999px;
-      font-size: 0.78rem;
+      z-index: 3;
+      right: 16px;
+      bottom: 12px;
+      font-family: Inter, sans-serif;
+      font-size: 0.74rem;
       font-weight: 800;
-      backdrop-filter: blur(5px);
+      letter-spacing: 0.06em;
+      color: rgba(23, 33, 43, 0.55);
     }
 
-    .back .page-number {
-      right: auto;
-      left: 14px;
+    .img-page .page-number {
+      color: rgba(23, 33, 43, 0.55);
     }
 
-    .click-zone {
-      position: absolute;
-      z-index: 70;
-      top: 0;
-      width: 50%;
-      height: 100%;
-      padding: 0;
-      border: 0;
-      background: transparent;
-      cursor: pointer;
-    }
+    /* ---- slider bar ---- */
 
-    .click-zone-left {
-      left: 0;
-      cursor: w-resize;
-    }
-
-    .click-zone-right {
-      right: 0;
-      cursor: e-resize;
-    }
-
-    .click-zone:disabled {
-      cursor: not-allowed;
-    }
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+    .book-slider-bar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
       align-items: center;
-      justify-content: center;
-      margin-top: 0;
-    }
-
-    .control-button {
-      min-width: 140px;
-      padding: 12px 18px;
-      color: white;
-      background: var(--teal);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      width: min(880px, 100%);
+      padding: 13px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+
+    #pageSlider {
+      width: 100%;
+      height: 6px;
+      margin: 0;
+      background: #243b4a;
+      border-radius: 3px;
+      -webkit-appearance: none;
+      appearance: none;
+      outline: none;
       cursor: pointer;
-      font-weight: 850;
-      box-shadow: 0 9px 20px rgba(0, 0, 0, 0.2);
-      transition:
-        transform 180ms ease,
-        background 180ms ease,
-        opacity 180ms ease;
     }
 
-    .control-button:hover:not(:disabled) {
-      background: #11a89b;
-      transform: translateY(-2px);
+    #pageSlider::-webkit-slider-thumb {
+      width: 17px;
+      height: 17px;
+      border: 2px solid var(--navy);
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(246, 196, 83, 0.55);
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: grab;
     }
 
-    .control-button:disabled {
-      cursor: not-allowed;
-      opacity: 0.42;
-    }
-
-    .page-status {
-      min-width: 170px;
-      color: white;
-      font-variant-numeric: tabular-nums;
-      font-weight: 750;
+    #pageSlider::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      border: 2px solid var(--navy);
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 10px rgba(246, 196, 83, 0.55);
+      cursor: grab;
     }
 
     .book-hint {
-      margin: 16px 0 0;
+      margin: 18px 0 0;
       color: #a9cbd2;
       font-size: 0.88rem;
     }
@@ -618,20 +682,6 @@
       .materials {
         padding-top: 65px;
       }
-
-      .book-stage {
-        min-height: calc((var(--page-height) * var(--book-scale)) + 55px);
-      }
-
-      .control-button {
-        min-width: 118px;
-        padding: 10px 14px;
-      }
-
-      .page-status {
-        order: -1;
-        width: 100%;
-      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -640,15 +690,13 @@
       }
 
       .atom {
-        animation: none;
-      }
-
-      .sheet,
-      .control-button {
         transition-duration: 0.01ms;
       }
     }
   </style>
+
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/turn.min.js"></script>
 </head>
 
 <body>
@@ -703,58 +751,67 @@
       <h2 class="section-heading">Interactive Biomolecules Book</h2>
 
       <p class="materials-description">
-        Click the right half of the book to move forward and the left half to
-        move backward. The example contains twelve image pages.
+        A real page-turn flip book powered by turn.js. Click a page corner to
+        turn, drag the slider, or use the arrow keys.
       </p>
 
-      <div class="book-stage">
-        <div class="book-scaler">
-          <div
-            class="book"
-            id="book"
-            aria-label="Interactive biomolecules image book"
-          >
-            <div class="base-page base-left" aria-hidden="true">
-              <div class="base-copy"></div>
-      
+      <div class="book-zone">
+        <div class="book-toolbar">
+          <span class="book-title">Biomolecules in Chemistry</span>
+        </div>
+
+        <div class="book-frame">
+          <div class="book-frame-inner">
+            <div id="flipbook" aria-label="Interactive biomolecules flip book">
+
+              <div class="hard cover-page" id="pageCover">
+                <div class="cover-inner">
+                  <span class="cover-brand">WISDOMYSTERY</span>
+                  <h2 class="cover-title">Biomolecules<br>in Chemistry</h2>
+                  <div class="cover-rule"></div>
+                  <p class="cover-sub">An interactive flip book</p>
+                </div>
+              </div>
+
+              <div class="text-page title-page" id="pageTitle">
+                <span class="tp-brand">WISDOMYSTERY</span>
+                <h2 class="tp-title">Biomolecules<br>in Chemistry</h2>
+                <div class="tp-rule"></div>
+                <p class="tp-sub">The chemical foundation of life</p>
+                <p class="tp-note">Carbohydrates · Lipids · Proteins · Nucleic Acids</p>
+                <span class="page-number">2</span>
+              </div>
+
+              <div class="text-page end-page" id="pageEnd">
+                <span class="tp-brand">WISDOMYSTERY</span>
+                <h2 class="tp-title">The End</h2>
+                <p class="tp-sub">
+                  Structure determines biological function.<br>
+                  Keep exploring the chemistry of life.
+                </p>
+                <span class="page-number">15</span>
+              </div>
+
+              <div class="hard back-cover" id="pageBack">
+                <div class="cover-inner">
+                  <span class="cover-brand">THE END</span>
+                  <div class="cover-rule"></div>
+                  <p class="cover-sub">Keep exploring</p>
+                </div>
+              </div>
+
             </div>
 
-            <div class="base-page base-right" aria-hidden="true">
-              <div class="base-copy">Biomolecules in Chemistry</div>
-            </div>
-			
-
-            <div class="spine" aria-hidden="true"></div>
-
-            <button
-              class="click-zone click-zone-left"
-              id="leftZone"
-              type="button"
-              aria-label="Flip to the previous page"
-            ></button>
-
-            <button
-              class="click-zone click-zone-right"
-              id="rightZone"
-              type="button"
-              aria-label="Flip to the next page"
-            ></button>
+            <div class="book-shadow"></div>
           </div>
         </div>
-      </div>
 
-      <div class="controls" aria-label="Book controls">
-        <button class="control-button" id="previousButton" type="button">
-          ← Previous
-        </button>
-
-        <span class="page-status" id="pageStatus" aria-live="polite">
-          Pages 1-2 of 12
-        </span>
-
-        <button class="control-button" id="nextButton" type="button">
-          Next →
-        </button>
+        <div class="book-slider-bar">
+          <input type="range" id="pageSlider" min="1" max="16" value="1" step="1">
+          <span class="page-status" id="pageStatus" aria-live="polite">
+            Page 1 of 16
+          </span>
+        </div>
       </div>
 
       <p class="book-hint">
@@ -776,12 +833,11 @@
       3. Replace the file names below with your own image paths.
       4. Keep an even number of images for complete two-page spreads.
 
-      The SVG placeholders shown here prevent broken images before your
-      image files are added. They are automatically replaced when a local
-      image cannot be loaded.
+      Missing images automatically fall back to a colored placeholder page
+      that shows the chapter title.
     */
 
-    const pageImages = [
+    var pageImages = [
       {
         src: "images/img_electromericeffect110.png",
         title: "Biomolecules",
@@ -856,16 +912,117 @@
       }
     ];
 
-    const book = document.getElementById("book");
-    const previousButton = document.getElementById("previousButton");
-    const nextButton = document.getElementById("nextButton");
-    const leftZone = document.getElementById("leftZone");
-    const rightZone = document.getElementById("rightZone");
-    const pageStatus = document.getElementById("pageStatus");
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
 
-    const sheets = [];
-    let currentSheet = 0;
-    let isAnimating = false;
+    $(function () {
+      var $book = $("#flipbook");
+      var $pageStatus = $("#pageStatus");
+      var $pageSlider = $("#pageSlider");
 
-    function createPlaceholder(page, pageNumber) {
-      const safeTitle =
+      // Build the twelve image pages and place them between title and end pages.
+      var imagePages = pageImages.map(function (info, i) {
+        return (
+          '<div class="img-page" style="background:linear-gradient(150deg, ' +
+          info.color +
+          '22 0%, ' +
+          info.color +
+          "05 45%, #f8f2e4 130%)'>" +
+          '<img class="img-page-bg" src="' +
+          escapeHtml(info.src) +
+          '" alt="' +
+          escapeHtml(info.title) +
+          '" onerror="this.remove()">' +
+          '<div class="img-page-copy">' +
+          "<h3>" +
+          escapeHtml(info.title) +
+          "</h3>" +
+          "<p>" +
+          escapeHtml(info.subtitle) +
+          "</p>" +
+          "</div>" +
+          '<span class="page-number">' +
+          (i + 3) +
+          "</span>" +
+          "</div>"
+        );
+      });
+
+      $("#pageTitle").after(imagePages.join(""));
+
+      function updateUI() {
+        var view = $book.turn("view") || [];
+        var total = $book.turn("pages");
+        var current = $book.turn("page");
+        var first = view[0];
+        var second = view[1];
+
+        if (first && second) {
+          $pageStatus.text("Pages " + first + "-" + second + " of " + total);
+        } else if (first) {
+          $pageStatus.text("Page " + first + " of " + total);
+        } else if (second) {
+          $pageStatus.text("Page " + second + " of " + total);
+        } else {
+          $pageStatus.text("Page " + current + " of " + total);
+        }
+
+        $pageSlider.attr("max", total).val(current);
+      }
+
+      function centerBook() {
+        var view = $book.turn("view") || [];
+        var w = $book.width();
+        var margin = 0;
+        if (view[0] === 0 && view[1]) {
+          margin = -w / 4;
+        } else if (view[0] && view[1] === 0) {
+          margin = w / 4;
+        }
+        $book.css("marginLeft", margin);
+      }
+
+      function sync() {
+        updateUI();
+        centerBook();
+      }
+
+      $book.turn({
+        width: 840,
+        height: 600,
+        display: "double",
+        acceleration: true,
+        gradients: false,
+        elevation: 0,
+        autoCenter: false,
+        duration: 600,
+        when: {
+          turned: sync,
+          start: sync,
+          first: sync,
+          last: sync
+        }
+      });
+
+      $pageSlider.on("input", function () {
+        $book.turn("page", Number(this.value));
+      });
+
+      $(document).on("keydown", function (event) {
+        var tag = event.target && event.target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+        if (event.keyCode === 37) $book.turn("previous");
+        else if (event.keyCode === 39) $book.turn("next");
+      });
+
+      sync();
+    });
+  </script>
+</body>
+
+</html>
