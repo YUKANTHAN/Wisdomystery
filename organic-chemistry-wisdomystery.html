@@ -149,6 +149,7 @@
     #flipbook {
       width: 1200px;
       height: 720px;
+      touch-action: pan-y;
     }
 
     #flipbook .book-shadow {
@@ -1088,7 +1089,7 @@
       <span class="pg-ind" id="pgInd">Front Cover</span>
       <button class="ctrl" id="nextBtn" title="Next page" aria-label="Next page">&#8250;</button>
     </div>
-    <div class="hint">Drag page corners to turn &#183; use &#8592; &#8594; arrow keys</div>
+    <div class="hint">Swipe or drag page corners to turn &#183; use &#8592; &#8594; arrow keys</div>
   </header>
 
   <!-- ─── BOOK ─── -->
@@ -1536,17 +1537,80 @@
       });
 
       function sizeBook() {
+        var single = mq.matches;
+        var display = single ? 'single' : 'double';
+        if ($book.turn('display') !== display) {
+          $book.turn('display', display);
+        }
+        var baseW = single ? 600 : 1200;
         var avail = Math.min(window.innerWidth - 32, 1240);
-        var s = Math.min(1, avail / 1200);
-        var w = Math.round(1200 * s);
+        var s = Math.min(1, avail / baseW);
+        var w = Math.round(baseW * s);
         var h = Math.round(720 * s);
         if ($book.turn('is')) {
           $book.turn('size', w, h);
         }
       }
 
+      var mq = window.matchMedia('(max-width: 820px)');
+
       $(window).on('resize', sizeBook);
+      if (mq.addEventListener) {
+        mq.addEventListener('change', sizeBook);
+      } else if (mq.addListener) {
+        mq.addListener(sizeBook);
+      }
       sizeBook();
+
+      if ($.isTouch || window.matchMedia('(pointer: coarse)').matches) {
+        $book.off('touchstart');
+        $(document).off('touchmove touchend');
+
+        var $zone = $('.stage').first();
+        var swipeStartX = null;
+        var swipeStartY = null;
+        var swipeTracking = false;
+
+        $zone.on('touchstart', function (e) {
+          if (e.originalEvent.touches.length !== 1) {
+            swipeTracking = false;
+            return;
+          }
+          swipeStartX = e.originalEvent.touches[0].clientX;
+          swipeStartY = e.originalEvent.touches[0].clientY;
+          swipeTracking = true;
+        });
+
+        $zone.on('touchmove', function (e) {
+          if (!swipeTracking || e.originalEvent.touches.length !== 1) return;
+          var dx = e.originalEvent.touches[0].clientX - swipeStartX;
+          var dy = e.originalEvent.touches[0].clientY - swipeStartY;
+          if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+          if (Math.abs(dx) > Math.abs(dy)) {
+            e.preventDefault();
+          } else {
+            swipeTracking = false;
+          }
+        });
+
+        $zone.on('touchend touchcancel', function (e) {
+          if (!swipeTracking) return;
+          var dx = 0;
+          var dy = 0;
+          if (e.originalEvent.changedTouches && e.originalEvent.changedTouches.length) {
+            dx = e.originalEvent.changedTouches[0].clientX - swipeStartX;
+            dy = e.originalEvent.changedTouches[0].clientY - swipeStartY;
+          }
+          swipeTracking = false;
+          if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+            if (dx < 0) {
+              $book.turn('next');
+            } else {
+              $book.turn('previous');
+            }
+          }
+        });
+      }
     });
 
     // ─── IUPAC Naming Checker ───
