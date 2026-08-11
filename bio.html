@@ -275,9 +275,33 @@
 
     .book-toolbar {
       display: flex;
+      align-items: center;
       justify-content: center;
+      gap: 14px;
       width: min(880px, 100%);
       padding: 10px 6px;
+    }
+
+    .nav-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(246, 196, 83, 0.55);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--gold);
+      font-size: 1.35rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
     }
 
     .book-title {
@@ -751,13 +775,16 @@
       <h2 class="section-heading">Interactive Biomolecules Book</h2>
 
       <p class="materials-description">
-        A real page-turn flip book powered by turn.js. Click a page corner to
-        turn, drag the slider, or use the arrow keys.
+        A real page-turn flip book powered by turn.js. Click the cover to
+        open the book, drag a page corner to turn, drag the slider, or use
+        the arrow keys.
       </p>
 
       <div class="book-zone">
         <div class="book-toolbar">
+          <button class="nav-btn" id="prevBtn" title="Previous page" aria-label="Previous page">&#8249;</button>
           <span class="book-title">Biomolecules in Chemistry</span>
+          <button class="nav-btn" id="nextBtn" title="Next page" aria-label="Next page">&#8250;</button>
         </div>
 
         <div class="book-frame">
@@ -815,7 +842,8 @@
       </div>
 
       <p class="book-hint">
-        Keyboard controls: use the left and right arrow keys.
+        Open the book with the cover or the next button, turn pages with the
+        arrow keys, and let the back cover close it at the end.
       </p>
     </section>
   </main>
@@ -928,11 +956,13 @@
       // Build the twelve image pages and place them between title and end pages.
       var imagePages = pageImages.map(function (info, i) {
         return (
-          '<div class="img-page" style="background:linear-gradient(150deg, ' +
+          '<div class="img-page" style="background-color:#f6ecd8;background-image:linear-gradient(150deg, ' +
           info.color +
-          '22 0%, ' +
+          '66 0%, ' +
           info.color +
-          "05 45%, #f8f2e4 130%)'>" +
+          '26 38%, ' +
+          info.color +
+          '0f 65%, rgba(246,236,216,0) 100%)">' +
           '<img class="img-page-bg" src="' +
           escapeHtml(info.src) +
           '" alt="' +
@@ -973,23 +1003,13 @@
         }
 
         $pageSlider.attr("max", total).val(current);
-      }
 
-      function centerBook() {
-        var view = $book.turn("view") || [];
-        var w = $book.width();
-        var margin = 0;
-        if (view[0] === 0 && view[1]) {
-          margin = -w / 4;
-        } else if (view[0] && view[1] === 0) {
-          margin = w / 4;
-        }
-        $book.css("marginLeft", margin);
+        $("#prevBtn").prop("disabled", current <= 1);
+        $("#nextBtn").prop("disabled", current >= total);
       }
 
       function sync() {
         updateUI();
-        centerBook();
       }
 
       $book.turn({
@@ -997,12 +1017,17 @@
         height: 600,
         display: "double",
         acceleration: true,
-        gradients: false,
-        elevation: 0,
-        autoCenter: false,
+        gradients: !$.isTouch,
+        elevation: 50,
+        autoCenter: true,
         duration: 600,
         when: {
-          turned: sync,
+          turned: function (event, page) {
+            sync();
+            if (page === 1) {
+              $(this).turn("peel", "r");
+            }
+          },
           start: sync,
           first: sync,
           last: sync
@@ -1011,6 +1036,14 @@
 
       $pageSlider.on("input", function () {
         $book.turn("page", Number(this.value));
+      });
+
+      $("#prevBtn").on("click", function () {
+        $book.turn("previous");
+      });
+
+      $("#nextBtn").on("click", function () {
+        $book.turn("next");
       });
 
       $(document).on("keydown", function (event) {
