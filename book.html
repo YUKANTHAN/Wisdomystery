@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="description" content="An interactive introduction to biomolecules in chemistry.">
+  <meta name="description" content="An interactive flip book of biomolecules in chemistry.">
 
-  <title>Biomolecules in Chemistry | WISDOMYSTERY</title>
+  <title>Interactive Biomolecules Book | WISDOMYSTERY</title>
 
   <style>
     :root {
@@ -111,145 +111,6 @@
       font-weight: 900;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-    }
-
-    /* -------------------- INTRODUCTION -------------------- */
-
-    .introduction {
-      display: grid;
-      grid-template-columns: 1.18fr 0.82fr;
-      gap: clamp(24px, 6vw, 72px);
-      align-items: center;
-      min-height: calc(100svh - 72px);
-      padding: 70px 0;
-    }
-
-    .intro-copy h1 {
-      max-width: 820px;
-      margin: 0 0 24px;
-      color: white;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.6rem, 7vw, 6rem);
-      line-height: 0.98;
-    }
-
-    .intro-copy h1 span {
-      color: var(--gold);
-    }
-
-    .intro-copy p {
-      max-width: 740px;
-      margin: 0 0 18px;
-      color: #d8e9ee;
-      font-size: clamp(1rem, 1.8vw, 1.16rem);
-      line-height: 1.8;
-    }
-
-    .material-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 14px;
-      padding: 13px 19px;
-      color: var(--navy);
-      background: var(--gold);
-      border-radius: 999px;
-      font-weight: 900;
-      text-decoration: none;
-      box-shadow: 0 12px 35px rgba(246, 196, 83, 0.2);
-    }
-
-    .molecule-card {
-      position: relative;
-      min-height: 390px;
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 34px;
-      background:
-        linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025));
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.28);
-    }
-
-    .molecule-card::before,
-    .molecule-card::after {
-      position: absolute;
-      content: "";
-      border: 1px solid rgba(34, 211, 238, 0.16);
-      border-radius: 50%;
-      inset: 12%;
-    }
-
-    .molecule-card::after {
-      inset: 24% 7%;
-      transform: rotate(58deg);
-    }
-
-    .atom {
-      position: absolute;
-      z-index: 2;
-      display: grid;
-      width: 68px;
-      height: 68px;
-      place-items: center;
-      color: var(--navy);
-      background: var(--cyan);
-      border: 7px solid rgba(255, 255, 255, 0.22);
-      border-radius: 50%;
-      font-weight: 900;
-      box-shadow: 0 0 35px rgba(34, 211, 238, 0.35);
-      animation: float 4.5s ease-in-out infinite;
-    }
-
-    .atom:nth-child(1) {
-      top: 13%;
-      left: 43%;
-    }
-
-    .atom:nth-child(2) {
-      top: 43%;
-      left: 15%;
-      background: var(--gold);
-      animation-delay: -1.2s;
-    }
-
-    .atom:nth-child(3) {
-      top: 56%;
-      right: 13%;
-      background: #7dd3fc;
-      animation-delay: -2.4s;
-    }
-
-    .atom:nth-child(4) {
-      bottom: 7%;
-      left: 43%;
-      background: #a7f3d0;
-      animation-delay: -3.1s;
-    }
-
-    .molecule-title {
-      position: absolute;
-      z-index: 4;
-      top: 45%;
-      left: 50%;
-      margin: 0;
-      color: white;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.55rem, 3vw, 2.35rem);
-      text-align: center;
-      text-shadow: 0 4px 18px #000;
-      transform: translate(-50%, -50%);
-    }
-
-    @keyframes float {
-
-      0%,
-      100% {
-        transform: translateY(0) scale(1);
-      }
-
-      50% {
-        transform: translateY(-14px) scale(1.05);
-      }
     }
 
     /* -------------------- FLIP BOOK -------------------- */
@@ -754,10 +615,6 @@
         margin-left: auto;
       }
 
-      .introduction {
-        padding: 55px 0;
-      }
-
       .materials {
         padding-top: 65px;
       }
@@ -766,10 +623,6 @@
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
-      }
-
-      .atom {
-        transition-duration: 0.01ms;
       }
     }
   </style>
@@ -781,50 +634,10 @@
 <body>
   <header class="site-header">
     <p class="topic-label">Chemistry Learning Material</p>
-    <a class="brand" href="#introduction">WISDOMYSTERY</a>
+    <a class="brand" href="#materials">WISDOMYSTERY</a>
   </header>
 
   <main>
-    <section class="introduction" id="introduction">
-      <div class="intro-copy">
-        <span class="section-kicker">Section 1 - Introduction</span>
-
-        <h1>Biomolecules in <span>Chemistry</span></h1>
-
-        <p>
-          Biomolecules are chemical compounds produced by living organisms.
-          They form cellular structures, store and transfer energy, carry
-          hereditary information, and regulate the reactions required for life.
-        </p>
-
-        <p>
-          The four major classes are <strong>carbohydrates</strong>,
-          <strong>lipids</strong>, <strong>proteins</strong>, and
-          <strong>nucleic acids</strong>. Most are built mainly from carbon,
-          hydrogen, oxygen, nitrogen, phosphorus, and sulfur.
-        </p>
-
-        <p>
-          Their properties depend on molecular structure and functional groups.
-          Small repeating units called monomers can join through condensation
-          reactions to produce larger polymers, while hydrolysis can break many
-          of these molecules into smaller units.
-        </p>
-
-        <a class="material-link" href="#materials">
-          Open learning material <span aria-hidden="true">↓</span>
-        </a>
-      </div>
-
-      <div class="molecule-card" aria-label="Decorative biomolecule illustration">
-        <div class="atom">C</div>
-        <div class="atom">H</div>
-        <div class="atom">O</div>
-        <div class="atom">N</div>
-        <p class="molecule-title">The chemistry<br>of life</p>
-      </div>
-    </section>
-
     <section class="materials" id="materials">
       <span class="section-kicker">Section 2 - Material</span>
       <h2 class="section-heading">Interactive Biomolecules Book</h2>
@@ -926,73 +739,73 @@
 
     var pageImages = [
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Biomolecules",
         subtitle: "The chemical foundation of life",
         color: "#0f766e"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Elements of Life",
         subtitle: "Carbon, hydrogen, oxygen, nitrogen, phosphorus and sulfur",
         color: "#0369a1"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Carbohydrates",
         subtitle: "Immediate energy and structural support",
         color: "#b45309"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Monosaccharides",
         subtitle: "Glucose and other simple sugars",
         color: "#c2410c"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Lipids",
         subtitle: "Energy storage, membranes and signaling",
         color: "#7c3aed"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Phospholipids",
         subtitle: "The basis of cellular membranes",
         color: "#4338ca"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Proteins",
         subtitle: "Structure, transport, defense and movement",
         color: "#be123c"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Amino Acids",
         subtitle: "Monomers joined by peptide bonds",
         color: "#9f1239"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Enzymes",
         subtitle: "Biological catalysts that accelerate reactions",
         color: "#047857"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Nucleic Acids",
         subtitle: "DNA and RNA store and express information",
         color: "#1d4ed8"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Nucleotides",
         subtitle: "Sugar, phosphate and nitrogenous base",
         color: "#6d28d9"
       },
       {
-        src: "images/biomolecules-screenshot.png",
+        src: "jones_reagent_with_structures.png",
         title: "Chemistry of Life",
         subtitle: "Structure determines biological function",
         color: "#0f766e"
